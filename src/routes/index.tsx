@@ -184,7 +184,9 @@ function BirthdayStory() {
 
   const handleTouchEnd = (event: TouchEvent) => {
     if (touchStart.current === null) return;
-    const distance = event.changedTouches[0].clientX - touchStart.current;
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+    const distance = touch.clientX - touchStart.current;
     if (Math.abs(distance) > 45) moveViewer(distance > 0 ? -1 : 1);
     touchStart.current = null;
   };
@@ -290,7 +292,8 @@ function BirthdayStory() {
           onClose={() => setViewerIndex(null)}
           onMove={moveViewer}
           onTouchStart={(event) => {
-            touchStart.current = event.touches[0].clientX;
+            const touch = event.touches[0];
+            touchStart.current = touch?.clientX ?? null;
           }}
           onTouchEnd={handleTouchEnd}
         />
@@ -426,7 +429,7 @@ function Landscape({ waterfall = false, sunrise = false }: { waterfall?: boolean
           <div className="mist mist-a" />
           <div className="mist mist-b" />
         </>
-      ) : (
+      ) : sunrise ? null : (
         <>
           <div className="road"><i /><i /><i /><i /></div>
           <div className="bike">
